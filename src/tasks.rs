@@ -3,7 +3,7 @@ use leptos_router::*;
 use serde::{Serialize,Deserialize};
 
 // Task struct from your API
-#[derive(PartialEq, Clone,Serialize, Deserialize)] // Ensure Task is Cloneable
+#[derive(PartialEq, Clone,Serialize, Deserialize, Debug)] // Ensure Task is Cloneable
 pub struct Task {
     pub name: String,
     pub priority: i32,
