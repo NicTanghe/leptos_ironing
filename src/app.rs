@@ -48,7 +48,7 @@ pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
 
 
 
-async fn get_task_vector() -> Vec<Task> {
+async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
     match get_tasks_from_api().await {
         Ok(fetched_tasks) => {
             logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);  // Log fetched tasks properly
@@ -56,7 +56,8 @@ async fn get_task_vector() -> Vec<Task> {
         }
         Err(err) => {
             logging::log!("Error fetching tasks: {:?}", err);
-            Vec::new() // Return an empty vector in case of an error
+            value // Returns old vector incase of error
+
         }
     }
 }
@@ -68,28 +69,29 @@ pub fn App() -> impl IntoView {
  
 
     let (contacts, _set_contacts) = create_contact_signal();
-    let (tasks, _set_tasks) = create_signal(vec![
-            Task {
-                name: "server not talked to".to_string(),
-                priority: 0,
-                task_id: 0 as i32
-            }
-        ]);
-  // Added task signal
+    let (tasks, set_tasks) = create_signal(vec![
+        Task {
+            name: "server not talked to".to_string(),
+            priority: 0,
+            task_id: 0 as i32,
+        },
+    ]);
 
-
-    // create_resource takes two arguments after its scope
-    // our resource
-    let _async_data = create_resource(
-        tasks,
-        // every time `count` changes, this will run
-        |_value| async move {
-            logging::log!("RESOURCE : loading data from API");
-            get_task_vector().await;
+    // Create a resource that fetches tasks from the API
+    let async_data = create_resource(
+        move || (),  // Pass an empty tuple as a dependency to ensure it runs once
+        move |_| async move {
+            logging::log!("RESOURCE: loading data from API");
+            get_task_vector(tasks.get()).await
         },
     );
 
-
+    // Update the tasks signal when data is loaded
+    create_effect(move |_| {
+        if let Some(fetched_tasks) = async_data.get() {
+            set_tasks(fetched_tasks);
+        }
+    });
 
 
     view! {
