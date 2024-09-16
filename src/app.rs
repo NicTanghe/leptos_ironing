@@ -68,7 +68,14 @@ pub fn App() -> impl IntoView {
  
 
     let (contacts, _set_contacts) = create_contact_signal();
-    let (tasks, _set_tasks) = create_signal(vec![]);  // Added task signal
+    let (tasks, _set_tasks) = create_signal(vec![
+            Task {
+                name: "server not talked to".to_string(),
+                priority: 0,
+                task_id: 0 as i32
+            }
+        ]);
+  // Added task signal
 
 
     // create_resource takes two arguments after its scope
