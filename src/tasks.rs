@@ -6,8 +6,8 @@ use serde::{Serialize,Deserialize};
 #[derive(PartialEq, Clone,Serialize, Deserialize, Debug)] // Ensure Task is Cloneable
 pub struct Task {
     pub name: String,
-    pub priority: i32,
-    pub status: i32,
+    pub priority: i8,
+    pub task_id: i32,
 }
 
 #[component]

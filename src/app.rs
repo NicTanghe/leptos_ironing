@@ -47,16 +47,21 @@ pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
 
 
 
+
 async fn get_task_vector() -> Vec<Task> {
     match get_tasks_from_api().await {
-        Ok(fetched_tasks) => fetched_tasks,
+        Ok(fetched_tasks) => {
+            logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);  // Log fetched tasks properly
+            fetched_tasks
+        }
         Err(err) => {
-            log::error!("Error fetching tasks: {:?}", err);
+            logging::log!("Error fetching tasks: {:?}", err);
             Vec::new() // Return an empty vector in case of an error
         }
     }
 }
-//(u can dell this and jsut use get_tasks_from_api just fix the error.)
+
+
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -72,7 +77,7 @@ pub fn App() -> impl IntoView {
         tasks,
         // every time `count` changes, this will run
         |_value| async move {
-            logging::log!("loading data from API");
+            logging::log!("RESOURCE : loading data from API");
             get_task_vector().await;
         },
     );
