@@ -24,6 +24,8 @@ async fn main() {
         .with_state(leptos_options);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+
+
     logging::log!("listening on http://{}", &addr);
     axum::serve(listener, app.into_make_service())
         .await
@@ -36,3 +38,6 @@ pub fn main() {
     // unless we want this to work with e.g., Trunk for a purely client-side app
     // see lib.rs for hydration function instead
 }
+
+
+

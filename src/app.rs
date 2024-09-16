@@ -1,3 +1,4 @@
+use crate::error_template::{AppError, ErrorTemplate};
 use leptos::*;
 use leptos_router::*;
 
@@ -6,10 +7,9 @@ use crate::tasks::*; // Assuming you have a tasks module for TaskList and TaskIn
 
 
 use crate::comms::get_tasks_from_api;
-use crate::tasks::Task;  // Assuming you updated comms.rs as shown above
+use crate::tasks::Task; // Assuming you updated comms.rs as shown above
 
 
-use env_logger;
 
 /// Function to create the contact list signal
 pub fn create_contact_signal() -> (ReadSignal<Vec<String>>, WriteSignal<Vec<String>>){
@@ -26,7 +26,8 @@ pub fn create_contact_signal() -> (ReadSignal<Vec<String>>, WriteSignal<Vec<Stri
 }
 
 /// Function to create the task list signal
-    pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
+
+pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
     let (tasks, set_tasks) = create_signal(vec![]);  // Initially empty vector
 
     // Fetch the tasks asynchronously
@@ -45,13 +46,40 @@ pub fn create_contact_signal() -> (ReadSignal<Vec<String>>, WriteSignal<Vec<Stri
     (tasks, set_tasks)
 }
 
+
+
+async fn get_task_vector() -> Vec<Task> {
+    match get_tasks_from_api().await {
+        Ok(fetched_tasks) => fetched_tasks,
+        Err(err) => {
+            log::error!("Error fetching tasks: {:?}", err);
+            Vec::new() // Return an empty vector in case of an error
+        }
+    }
+}
+//(u can dell this and jsut use get_tasks_from_api just fix the error.)
+
 #[component]
 pub fn App() -> impl IntoView {
  
-    env_logger::init();  // For non-browser environments
 
     let (contacts, _set_contacts) = create_contact_signal();
-    let (tasks, _set_tasks) = create_task_signal();  // Added task signal
+    let (tasks, _set_tasks) = create_signal(vec![]);  // Added task signal
+
+
+    // create_resource takes two arguments after its scope
+    // our resource
+    let _async_data = create_resource(
+        tasks,
+        // every time `count` changes, this will run
+        |_value| async move {
+            logging::log!("loading data from API");
+            get_task_vector().await;
+        },
+    );
+
+
+
 
     view! {
         <Router>

@@ -1,9 +1,9 @@
 use leptos::*;
 use leptos_router::*;
-use serde::Deserialize;
+use serde::{Serialize,Deserialize};
 
 // Task struct from your API
-#[derive(Clone,Deserialize)] // Ensure Task is Cloneable
+#[derive(PartialEq, Clone,Serialize, Deserialize)] // Ensure Task is Cloneable
 pub struct Task {
     pub name: String,
     pub priority: i32,

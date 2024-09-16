@@ -1,8 +1,9 @@
 use http::status::StatusCode;
 use leptos::*;
 use thiserror::Error;
+use serde::{Serialize,Deserialize};
 
-#[derive(Clone, Debug, Error)]
+#[derive(Clone, Debug, Error, Serialize, Deserialize)]
 pub enum AppError {
     #[error("Not Found")]
     NotFound,
