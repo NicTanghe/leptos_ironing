@@ -3,9 +3,9 @@ use leptos_router::*;
 
 use crate::contacts::*;
 
-use crate::tasks::tasks_p1::*;
 
-use crate::comms::get_tasks_from_api;
+use crate::tasks::tasks_p1::*;
+use crate::tasks::tasks_vieuw::*;
 
 
 
@@ -25,43 +25,11 @@ pub fn create_contact_signal() -> (ReadSignal<Vec<String>>, WriteSignal<Vec<Stri
 
 /// Function to create the task list signal
 
-pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
-    let (tasks, set_tasks) = create_signal(vec![]);  // Initially empty vector
-
-    // Fetch the tasks asynchronously
-    spawn_local(async move {
-        match get_tasks_from_api().await {
-            Ok(fetched_tasks) => {
-                // Update the signal with fetched tasks
-                set_tasks(fetched_tasks);
-            }
-            Err(err) => {
-                log::error!("Error fetching tasks: {:?}", err);
-            }
-        }
-    });
-
-    (tasks, set_tasks)
-}
 
 
 
 
-async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
-    match get_tasks_from_api().await {
-        Ok(fetched_tasks) => {
-            logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);  // Log fetched tasks properly
-            fetched_tasks
-        }
-        Err(err) => {
-            logging::log!("Error fetching tasks: {:?}", err);
-            value // Returns old vector incase of error
-
-        }
-    }
-}
-
-
+// note look at using a sagnal aswess for increased responsiveness
 
 #[component]
 pub fn App() -> impl IntoView {
