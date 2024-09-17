@@ -2,11 +2,10 @@ use leptos::*;
 use leptos_router::*;
 
 use crate::contacts::*;
-use crate::tasks::*; // Assuming you have a tasks module for TaskList and TaskInfo
 
+use crate::tasks::tasks_p1::*;
 
 use crate::comms::get_tasks_from_api;
-use crate::tasks::Task; // Assuming you updated comms.rs as shown above
 
 
 

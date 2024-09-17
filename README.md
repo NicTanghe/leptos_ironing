@@ -10,4 +10,4 @@ This was made using the axum template [Leptos](https://github.com/leptos-rs/lept
 ## pointy things
 
 
-Its an attemt to get the nested navlinks to work with an sql table.
+THis gets the data from an api and uses it to create nested navlinks.
