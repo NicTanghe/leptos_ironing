@@ -55,7 +55,7 @@ pub fn task_routes(
                 <p>"Select a task to view more info."</p>
             }/>
             <Route path=":id" view=move || view! { <TaskInfo tasks={tasks} /> }>   {/* Added TaskInfo component */}
-                <Route path="" view=|| view! {
+                <Route path="" view= move || view! {
                     <div class="tab">"Task Info"</div>
                     <button on:click=move |_| handle_task_delete(1)> // Pass a task id, e.g., 1
                         "Delete Task 1"
