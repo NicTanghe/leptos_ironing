@@ -87,19 +87,7 @@ pub fn App() -> impl IntoView {
                 </Route>
 
                 {/* Tasks Routes */}
-                <Route path="/tasks" view=move || view!{ <TaskList tasks />}>   {/* Added TaskList component */}
-                    <Route path="" view=|| view! {
-                        <p>"Select a task to view more info."</p>
-                    }/>
-                    <Route path=":id" view=move || view!{ <TaskInfo tasks />}>   {/* Added TaskInfo component */}
-                        <Route path="" view=|| view! {
-                            <div class="tab">"Task Info"</div>
-                        }/>
-                        <Route path="conversations" view=|| view! {
-                            <div class="tab">"Task Conversations"</div>  {/* Task-specific tab */}
-                        }/>
-                    </Route>
-                </Route>
+                    {task_routes(tasks,set_tasks)}
             </Routes>
         </Router>
     }

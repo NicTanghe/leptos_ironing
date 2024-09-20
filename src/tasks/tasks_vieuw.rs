@@ -1,8 +1,9 @@
 use leptos::*; // Assuming you're using the Leptos framework
-use crate::tasks::tasks_p1::Task; // Assuming `Task` is defined in your main or another module
+use leptos_router::Route;
 
+use crate::tasks::tasks_p1::*; // Assuming `Task` is defined in your main or another module
+use crate::comms::*;
 
-use crate::comms::get_tasks_from_api;
 
 pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
     let (tasks, set_tasks) = create_signal(vec![]);
@@ -24,7 +25,7 @@ pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
 pub async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
     match get_tasks_from_api().await {
         Ok(fetched_tasks) => {
-            logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);
+         //   logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);
             fetched_tasks
         }
         Err(err) => {
@@ -34,4 +35,58 @@ pub async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
     }
 }
 
-// Add any other task-related functions here
+
+// Handle delete action
+async fn handle_task_delete(id: i32, set_tasks: WriteSignal<Vec<Task>>) {
+    // First delete from the resource synchronously
+    delete_task_resource_by_id(id, set_tasks);
+
+    // Always run the API call, regardless of the result
+    let result = delete_task_from_api(id).await;
+   
+    // Check the result and log both success and error cases
+    match result {
+        Ok(_) => {
+            // Log success
+            logging::log!("Successfully deleted task from API with id: {}", id);
+        },
+        Err(e) => {
+            // Log failure
+            logging::log!("Failed to delete task from API: {}", e);
+        }
+    }
+}
+
+
+
+// Define task routes
+pub fn task_routes(
+    tasks: ReadSignal<Vec<Task>>, 
+    set_tasks: WriteSignal<Vec<Task>>
+) -> impl IntoView {
+
+    // Define the view
+    view! {
+        <Route path="/tasks" view=move || view! { <TaskList tasks={tasks} /> }>   {/* Added TaskList component */}
+            <Route path="" view=|| view! {
+                <p>"Select a task to view more info."</p>
+            }/>
+            <Route path=":id" view=move || view! { <TaskInfo tasks={tasks} /> }>   {/* Added TaskInfo component */}
+                <Route path="" view=move || view! {
+                    <div class="tab">"Task Info"</div>
+                    <button on:click=move |_| {
+                        spawn_local(async move {
+                            handle_task_delete(1, set_tasks).await;  // Use spawn_local to run async function
+                        });  // Wrap in braces and add semicolon inside
+                    }>
+                        "Delete Task 1"
+                    </button>
+                }/>
+                <Route path="conversations" view=|| view! {
+                    <div class="tab">"Task Conversations"</div>  {/* Task-specific tab */}
+                }/>
+            </Route>
+        </Route>
+    }
+}
+

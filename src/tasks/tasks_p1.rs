@@ -62,3 +62,15 @@ pub fn TaskInfo(tasks: ReadSignal<Vec<Task>>) -> impl IntoView {
         </div>
     }
 }
+
+
+// Function to delete a task by ID
+pub fn delete_task_resource_by_id(id: i32, set_tasks: WriteSignal<Vec<Task>>) {
+    set_tasks.update(|tasks| {
+        *tasks = tasks.iter()
+                      .cloned() // Clone each task
+                      .filter(|task| task.task_id != id) // Filter out the task with the given ID
+                      .collect(); // Collect the remaining tasks
+    });
+
+}
