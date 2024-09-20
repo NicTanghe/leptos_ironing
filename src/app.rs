@@ -48,7 +48,7 @@ pub fn App() -> impl IntoView {
     let async_data = create_resource(
         move || (),  // Pass an empty tuple as a dependency to ensure it runs once
         move |_| async move {
-            logging::log!("RESOURCE: loading data from API");
+ //           logging::log!("RESOURCE: loading data from API");
             get_task_vector(tasks.get()).await
         },
     );

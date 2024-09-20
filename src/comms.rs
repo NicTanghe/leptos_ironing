@@ -71,7 +71,7 @@ pub async fn get_tasks_from_api() -> Result<Vec<Task>, Error> {
 
     // Log success status
     logging::log!("Successfully received response from API.");
-    logging::log!("COMMS: \n Loaded data from API: {:?}", api_response.data);
+//   logging::log!("COMMS: \n Loaded data from API: {:?}", api_response.data);
 
     // Return the tasks from the data field
     Ok(api_response.data)

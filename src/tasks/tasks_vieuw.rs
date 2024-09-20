@@ -22,11 +22,12 @@ pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
     (tasks, set_tasks)
 }
 
+
 // Fetch task vector
 pub async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
     match get_tasks_from_api().await {
         Ok(fetched_tasks) => {
-            logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);
+//            logging::log!("Fetched tasks:\n{:#?}", fetched_tasks);
             fetched_tasks
         }
         Err(err) => {
@@ -35,7 +36,6 @@ pub async fn get_task_vector(value: Vec<Task>) -> Vec<Task> {
         }
     }
 }
-
 
 
 fn handle_task_delete(id: i32, set_tasks: WriteSignal<Vec<Task>>) {
