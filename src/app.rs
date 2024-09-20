@@ -88,7 +88,7 @@ pub fn App() -> impl IntoView {
                 </Route>
 
                 {/* Tasks Routes */}
-                 task_routes(tasks,task_routes) 
+                {task_routes(tasks,set_tasks)} //there wher mistakes here that werent made by me
                 
             </Routes>
         </Router>

@@ -4,7 +4,6 @@ use crate::tasks::tasks_p1::*; // Assuming `Task` is defined in your main or ano
 use crate::comms::get_tasks_from_api;
 
 
-use std::rc::Rc;
 // Create task signals
 pub fn create_task_signal() -> (ReadSignal<Vec<Task>>, WriteSignal<Vec<Task>>) {
     let (tasks, set_tasks) = create_signal(vec![]);
