@@ -24,12 +24,12 @@ pub async fn get_tasks_from_api() -> Result<Vec<Task>, Error> {
                 Task {
                     name: "ERROR!".to_string(),
                     priority: 1, 
-                    task_id: 0,
+                    task_id: 505,
                 },
                 Task {
                     name: "Something went wrong".to_string(),
                     priority: 1,
-                    task_id: 0,
+                    task_id: 505,
                 }
             ]);
         }
